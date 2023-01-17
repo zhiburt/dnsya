@@ -13,8 +13,15 @@ cargo install --path .
 ## Usage
 
 ```bash
-sudo dnsya -f r -o name wlan0
+$ sudo dnsya -f r -o name wlan0
 ```
+
+```log
+127.0.0.1 github.com.
+127.0.0.1 gitlab.com.
+127.0.0.1 sr.ht.
+```
+
 ___________
 
 Inspired by [`dnstop`](https://github.com/measurement-factory/dnstop)

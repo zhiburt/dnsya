@@ -5,12 +5,12 @@ use std::{
     process::exit,
     sync::{
         atomic::{AtomicBool, Ordering},
-        mpsc::{channel, Receiver, Sender},
         Arc,
     },
 };
 
 use config::{Config, PacketType};
+use crossbeam::channel::{unbounded, Receiver, Sender};
 use pcap::{Active, Capture, Device, Linktype};
 use pnet_packet::{
     ethernet::{EtherTypes, EthernetPacket},
@@ -50,7 +50,7 @@ fn main() {
     ctrlc::set_handler(move || ctrlc1.store(true, Ordering::SeqCst))
         .expect("Error setting Ctrl-C handler");
 
-    let (cx, rx) = channel();
+    let (cx, rx) = unbounded();
 
     let _ = std::thread::spawn(move || read_packets(cap, cx, ctrlc));
 
