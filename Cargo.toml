@@ -1,0 +1,15 @@
+[package]
+name = "dnsya"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+pcap = "1.0"
+pnet_packet = "0.31"
+trust-dns-proto = "0.22"
+tabled = "0.10"
+clap = { version = "4.1", features = ["derive"] }
+ctrlc = { version = "3.2" }
+crossbeam = "0.8"
