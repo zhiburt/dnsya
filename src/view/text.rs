@@ -1,25 +1,48 @@
-use super::View;
+use crate::config::PacketType;
+
+use super::{PacketInfo, View};
 
 pub struct TextView {
-    print_name: bool,
+    _name: bool,
+    _type: bool,
+    _port: bool,
 }
 
 impl TextView {
-    pub fn new(print_name: bool) -> Self {
-        Self { print_name }
+    pub fn new(_name: bool, _type: bool, _port: bool) -> Self {
+        Self {
+            _name,
+            _type,
+            _port,
+        }
     }
 }
 
 impl View for TextView {
-    fn render(&mut self, ip: std::net::Ipv4Addr, name: &str, _: crate::config::PacketType) {
-        print!("{}", ip);
+    fn render(&mut self, pkt: PacketInfo) {
+        print!("{}", pkt.dst);
 
-        if self.print_name {
-            print!(" {}", name);
+        if self._port {
+            print!(" {}", pkt.dst_port);
+        }
+
+        if self._name {
+            print!(" {}", pkt.query_name);
+        }
+
+        if self._type {
+            print!(" {}", msg_type_to_string(pkt.msg_type));
         }
 
         println!()
     }
 
     fn flush(&mut self) {}
+}
+
+fn msg_type_to_string(t: PacketType) -> &'static str {
+    match t {
+        PacketType::Query => "q",
+        PacketType::Response => "r",
+    }
 }

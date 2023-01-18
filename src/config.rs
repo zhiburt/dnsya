@@ -10,21 +10,14 @@ pub struct Config {
     pub format: OutputFormat,
 }
 
-#[derive(Debug, Clone)]
-pub struct FormatOptions {
-    pub service_name: bool,
-}
-
 impl Config {
     pub fn parse() -> Self {
         let config = CLIConfig::parse();
         Self {
             device: config.device,
             filter: config.filter,
+            options: config.options.unwrap_or_default(),
             format: config.format.unwrap_or(OutputFormat::Text),
-            options: FormatOptions {
-                service_name: config.options.contains(&OutputOptions::Name),
-            },
         }
     }
 }
@@ -38,9 +31,9 @@ struct CLIConfig {
     /// DNS packet filtering (q - query, r - response)
     #[arg(short, long, value_name = "FILTER")]
     filter: Option<PacketType>,
-    /// Optional data display (name)
-    #[arg(short, long, value_name = "OPTION")]
-    options: Vec<OutputOptions>,
+    /// Optional data display (options: 'p', 's', 't')
+    #[arg(short, long, value_name = "OPTIONS")]
+    options: Option<FormatOptions>,
     /// Output format (text | csv | table)
     #[arg(long, value_name = "FORMAT")]
     format: Option<OutputFormat>,
@@ -106,5 +99,30 @@ impl FromStr for OutputFormat {
                 "unexpected output format",
             )),
         }
+    }
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct FormatOptions {
+    pub port: bool,
+    pub service_name: bool,
+    pub packet_type: bool,
+}
+
+impl FromStr for FormatOptions {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut options = FormatOptions::default();
+        for c in s.chars() {
+            match c {
+                'p' => options.port = true,
+                's' => options.service_name = true,
+                't' => options.packet_type = true,
+                c => return Err(format!("unexpected option {:?}", c)),
+            }
+        }
+
+        Ok(options)
     }
 }

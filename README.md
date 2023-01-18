@@ -13,7 +13,7 @@ cargo install --path .
 ## Usage
 
 ```bash
-$ sudo dnsya -f r -o name wlan0
+$ dnsya -f=r -o=s wlan0
 ```
 
 ```log
